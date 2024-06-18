@@ -15,10 +15,17 @@ type Pagination = {
 type Filter = {
   sortBy: string;
   order: string;
+};
+
+type Projection = {
   select: string;
 };
 
-type CategoryQuery = { category: string; page: Pagination } & Partial<Filter>;
+type Descriptor = Partial<{ page: Partial<Pagination> } & Filter & Projection>;
+
+type CategoryQuery = {
+  category: string;
+} & Descriptor;
 
 const dynamicBaseQuery: BaseQueryFn<
   string | FetchArgs,
@@ -45,7 +52,7 @@ export const productsApi = createApi({
   baseQuery: dynamicBaseQuery,
   tagTypes: ["Product", "Category"],
   endpoints: (builder) => ({
-    topProducts: builder.query<any, { page: Pagination } & Partial<Filter>>({
+    topProducts: builder.query<any, Descriptor>({
       query: ({ page }) => {
         return {
           url: "/",
@@ -63,7 +70,6 @@ export const productsApi = createApi({
           params: { ...page },
         };
       },
-      providesTags: () => ["Category"],
     }),
     productsByCategory: builder.query<any, CategoryQuery>({
       query: ({ category, page }) => {
@@ -95,4 +101,5 @@ export const {
   useTopProductsQuery,
   useLazyTopProductsQuery,
   useProductsOfFavoriteCategoryQuery,
+  usePrefetch,
 } = productsApi;

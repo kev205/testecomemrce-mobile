@@ -1,10 +1,9 @@
+import { Article } from "@/api/models/entities";
 import CardItem from "@/components/CardItem";
 import { useProductsByCategoryQuery } from "@/services/products";
 import { capitalizeString } from "@/utils/string";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { Dimensions, FlatList } from "react-native";
-
-type Article = any;
 
 const { width } = Dimensions.get("screen");
 

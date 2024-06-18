@@ -8,7 +8,7 @@ type ProductsState = {
 };
 
 const slice = createSlice({
-  name: "auth",
+  name: "products",
   initialState: { categories: {}, topGoods: [] } as ProductsState,
   reducers: {},
   extraReducers: (builder) => {

@@ -5,10 +5,10 @@ import { useProductsOfFavoriteCategoryQuery } from "@/services/products";
 import MySectionList from "../MySectionList";
 import CardItem from "../CardItem";
 import { capitalizeString } from "@/utils/string";
+import { Article } from "@/api/models/entities";
+import { favoriteCategory } from "@/app";
 
 const { width } = Dimensions.get("screen");
-
-type Article = any;
 
 type Section = {
   id: string;
@@ -22,11 +22,9 @@ type Section = {
   onMore?: any;
 };
 
-const category = "smartphones";
-
 export default function HomeSections() {
   const { data } = useProductsOfFavoriteCategoryQuery({
-    category,
+    category: favoriteCategory,
     page: {
       skip: 0,
       limit: 12,
@@ -68,11 +66,11 @@ export default function HomeSections() {
     >
       {[
         {
-          id: category,
-          title: capitalizeString(category),
+          id: favoriteCategory,
+          title: capitalizeString(favoriteCategory),
           items: data?.products,
           hasMore: data?.total > 12,
-          onMore: () => router.navigate(`/(app)/(all)/${category}`),
+          onMore: () => router.navigate(`/(app)/(all)/${favoriteCategory}`),
           display: "grid",
           flexDirection: "row",
           renderItem: renderGood,

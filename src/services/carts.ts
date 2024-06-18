@@ -13,6 +13,7 @@ type Pagination = {
 };
 
 type CartPayload = {
+  id: number;
   userId: number;
   products: { id: number; quantity: number }[];
 };
@@ -30,7 +31,7 @@ const dynamicBaseQuery: BaseQueryFn<
     typeof args === "string" ? adjustedUrl : { ...args, url: adjustedUrl };
 
   return fetchBaseQuery({
-    baseUrl: `${BASE_API_URL}/cats`,
+    baseUrl: `${BASE_API_URL}/carts`,
     prepareHeaders(headers) {
       headers.set("Authorization", `Bearer ${session.token}`);
     },
@@ -42,26 +43,47 @@ export const cartsApi = createApi({
   baseQuery: dynamicBaseQuery,
   tagTypes: ["Cart"],
   endpoints: (builder) => ({
-    cartsByUser: builder.query<any, number>({
-      query: (id) => {
-        return {
-          url: `/user/${id}`,
-          methood: "GET",
-        };
-      },
+    cartsByUser: builder.query<any, { id: number } & Partial<Pagination>>({
+      query: ({ id, ...page }) => ({
+        url: `/user/${id}?`,
+        params: { ...page },
+      }),
       providesTags: () => ["Cart"],
     }),
-    addCart: builder.mutation<any, CartPayload>({
+    addCart: builder.mutation<any, Partial<CartPayload>>({
       query: ({ userId, products }) => {
         return {
-          url: "add",
+          url: "/add",
           methood: "POST",
           body: { userId, products },
+          headers: { "Content-Type": "application/json" },
         };
       },
-      invalidatesTags: () => ["Cart"],
+    }),
+    updateCart: builder.mutation<any, Partial<CartPayload>>({
+      query: ({ id, products }) => {
+        return {
+          url: `/${id}`,
+          method: "PATCH",
+          body: { products, merge: false },
+          headers: { "Content-Type": "application/json" },
+        };
+      },
+    }),
+    deleteCart: builder.mutation<any, number>({
+      query: (id) => {
+        return {
+          url: `/${id}`,
+          methood: "DELETE",
+        };
+      },
     }),
   }),
 });
 
-export const { useLazyCartsByUserQuery, useAddCartMutation } = cartsApi;
+export const {
+  useLazyCartsByUserQuery,
+  useAddCartMutation,
+  useUpdateCartMutation,
+  useDeleteCartMutation,
+} = cartsApi;

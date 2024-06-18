@@ -1,3 +1,4 @@
+import { Cart } from "@/api/models/entities";
 import {
   createContext,
   PropsWithChildren,
@@ -6,13 +7,8 @@ import {
   useState,
 } from "react";
 
-export type Cart = Partial<{
-  id: number;
-  products: any[];
-}>;
-
 interface CartContextType {
-  cart: Cart;
+  cart: Partial<Cart>;
   total?: number;
   addToCart?: (item?: any) => void;
   removeFromCart?: (id: number) => void;
@@ -34,7 +30,7 @@ export function useCart() {
 }
 
 export function CartProvider({ children }: PropsWithChildren) {
-  const [cart, setCart] = useState<Cart>({});
+  const [cart, setCart] = useState<Partial<Cart>>({});
 
   const addToCart = (item?: any) => {
     setCart((prev) => {

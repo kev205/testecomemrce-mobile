@@ -1,13 +1,16 @@
-import { useCart } from "@/context/CartContext";
 import { useState } from "react";
 import { Avatar, List, Text, useTheme } from "react-native-paper";
 import Quantifier from "./Quantifier";
 import { Pressable, View } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
-export default function CartItem({ item }: { item: any }) {
-  const { removeFromCart } = useCart();
-
+export default function CartItem({
+  item,
+  removeFromCart,
+}: {
+  item: any;
+  removeFromCart?: any;
+}) {
   const { colors } = useTheme();
 
   const remove = () => removeFromCart && removeFromCart(item.id);

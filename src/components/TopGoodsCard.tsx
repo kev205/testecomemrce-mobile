@@ -1,11 +1,10 @@
+import { Article } from "@/api/models/entities";
 import { router } from "expo-router";
 import { FC, memo, useMemo } from "react";
 import { ImageBackground, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { Text, useTheme } from "react-native-paper";
 import { SharedValue, runOnJS } from "react-native-reanimated";
-
-type Article = any;
 
 type TopGoodsCardProps = {
   item: Partial<Article>;

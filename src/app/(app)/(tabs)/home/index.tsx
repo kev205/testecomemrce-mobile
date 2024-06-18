@@ -5,14 +5,11 @@ import Carousel from "react-native-reanimated-carousel";
 import HomeSections from "@/components/suspense/HomeSections";
 import TopGoodsCard from "@/components/TopGoodsCard";
 import { useTopProductsQuery } from "@/services/products";
+import { Article } from "@/api/models/entities";
 
 const { width, height } = Dimensions.get("screen");
 
-type Article = any;
-
 export default function Page() {
-  // states
-
   const { data: topGoods } = useTopProductsQuery({
     page: {
       skip: 0,
