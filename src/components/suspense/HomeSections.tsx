@@ -1,8 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { Dimensions, View } from "react-native";
-import MySectionList from "../product/MySectionList";
 import { router } from "expo-router";
-import CardItem from "../product/CardItem";
+import { useProductsOfFavoriteCategoryQuery } from "@/services/products";
+import MySectionList from "../MySectionList";
+import CardItem from "../CardItem";
+import { capitalizeString } from "@/utils/string";
 
 const { width } = Dimensions.get("screen");
 
@@ -20,29 +22,17 @@ type Section = {
   onMore?: any;
 };
 
+const category = "smartphones";
+
 export default function HomeSections() {
-  const [sections, setSections] = useState<Array<Partial<Section>>>([]);
-
-  const data: any = {};
-
-  useEffect(() => {
-    if (data?.products) {
-      setSections(
-        data.products.items.map((section) => ({
-          id: section.id,
-          title: section.name,
-          items: section.articles,
-          hasMore: (section.articles?.length ?? 0) >= 12,
-          onMore: () =>
-            section.name &&
-            router.navigate(`/(app)/all/${section.name.toLowerCase()}`),
-          display: "list",
-          flexDirection: "row",
-          renderItem: renderGood,
-        }))
-      );
-    }
-  }, [data]);
+  const { data } = useProductsOfFavoriteCategoryQuery({
+    category,
+    page: {
+      skip: 0,
+      limit: 12,
+    },
+    select: "id,title,thumbnail,category,brand,price,discountPercentage",
+  });
 
   const renderGood = ({ item }: { item: Partial<Article>; index: number }) => (
     <CardItem key={item.id} item={item} size={width / 4 + width / 25} />
@@ -73,9 +63,21 @@ export default function HomeSections() {
       style={{
         flex: 1,
         paddingHorizontal: 5,
+        marginTop: 16,
       }}
     >
-      {[...sections].map(renderSectionItems)}
+      {[
+        {
+          id: category,
+          title: capitalizeString(category),
+          items: data?.products,
+          hasMore: data?.total > 12,
+          onMore: () => router.navigate(`/(app)/(all)/${category}`),
+          display: "grid",
+          flexDirection: "row",
+          renderItem: renderGood,
+        } as Partial<Section>,
+      ].map(renderSectionItems)}
     </View>
   );
 }

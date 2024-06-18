@@ -13,31 +13,13 @@ const slice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addMatcher(
-      productsApi.endpoints.topProducts.matchPending,
-      (state) => {
-        console.log("fetching top products");
-      }
-    );
-    builder.addMatcher(
       productsApi.endpoints.topProducts.matchFulfilled,
       (state, payload) => {
         state.topGoods = payload.payload.products;
       }
     );
     builder.addMatcher(
-      productsApi.endpoints.topProducts.matchFulfilled,
-      (state, err) => {
-        console.error(err);
-      }
-    );
-    builder.addMatcher(
-      productsApi.endpoints.productsByCategory.matchPending,
-      (state) => {
-        console.log("fetching top products");
-      }
-    );
-    builder.addMatcher(
-      productsApi.endpoints.productsByCategory.matchFulfilled,
+      productsApi.endpoints.productsOfFavoriteCategory.matchFulfilled,
       (
         state,
         {
@@ -50,12 +32,6 @@ const slice = createSlice({
         }
       ) => {
         state.categories[category] = payload.products;
-      }
-    );
-    builder.addMatcher(
-      productsApi.endpoints.productsByCategory.matchFulfilled,
-      (state, err) => {
-        console.error(err);
       }
     );
   },

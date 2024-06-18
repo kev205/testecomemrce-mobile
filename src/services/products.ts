@@ -12,26 +12,30 @@ type Pagination = {
   skip: number;
 };
 
-type CategoryQuery = { category: string; page: Pagination };
+type Filter = {
+  sortBy: string;
+  order: string;
+  select: string;
+};
+
+type CategoryQuery = { category: string; page: Pagination } & Partial<Filter>;
 
 const dynamicBaseQuery: BaseQueryFn<
   string | FetchArgs,
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
-  const session = {};
+  const session: any = {};
 
   const urlSuffix = typeof args === "string" ? args : args.url;
   const adjustedUrl = `${urlSuffix}`;
   const adjustedArgs =
     typeof args === "string" ? adjustedUrl : { ...args, url: adjustedUrl };
 
-  console.log("adjustedArgs", adjustedArgs);
-
   return fetchBaseQuery({
     baseUrl: `${BASE_API_URL}/products`,
     prepareHeaders(headers) {
-      headers.set("Authorization", `Bearer ${session.token?.token}`);
+      headers.set("Authorization", `Bearer ${session.token}`);
     },
   })(adjustedArgs, api, extraOptions);
 };
@@ -41,7 +45,7 @@ export const productsApi = createApi({
   baseQuery: dynamicBaseQuery,
   tagTypes: ["Product", "Category"],
   endpoints: (builder) => ({
-    topProducts: builder.query<any, { page: Pagination }>({
+    topProducts: builder.query<any, { page: Pagination } & Partial<Filter>>({
       query: ({ page }) => {
         return {
           url: "/",

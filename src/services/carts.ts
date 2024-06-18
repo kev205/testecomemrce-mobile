@@ -22,19 +22,17 @@ const dynamicBaseQuery: BaseQueryFn<
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
-  const session = {};
+  const session: any = {};
 
   const urlSuffix = typeof args === "string" ? args : args.url;
   const adjustedUrl = `${urlSuffix}`;
   const adjustedArgs =
     typeof args === "string" ? adjustedUrl : { ...args, url: adjustedUrl };
 
-  console.log("adjustedArgs", adjustedArgs);
-
   return fetchBaseQuery({
     baseUrl: `${BASE_API_URL}/cats`,
     prepareHeaders(headers) {
-      headers.set("Authorization", `Bearer ${session.token?.token}`);
+      headers.set("Authorization", `Bearer ${session.token}`);
     },
   })(adjustedArgs, api, extraOptions);
 };
@@ -66,4 +64,4 @@ export const cartsApi = createApi({
   }),
 });
 
-export const {} = cartsApi;
+export const { useLazyCartsByUserQuery, useAddCartMutation } = cartsApi;

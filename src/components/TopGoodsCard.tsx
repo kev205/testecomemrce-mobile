@@ -17,8 +17,6 @@ type TopGoodsCardProps = {
 const TopGoodsCard: FC<TopGoodsCardProps> = ({ item, index, count }) => {
   const { colors } = useTheme();
 
-  const [cover] = Array.isArray(item?.cover) ? item.cover : [item.cover] ?? [];
-
   const onTap = () => {
     router.navigate(`/product/${item.id}`);
   };
@@ -35,7 +33,7 @@ const TopGoodsCard: FC<TopGoodsCardProps> = ({ item, index, count }) => {
   return (
     <GestureDetector gesture={goToDetails}>
       <View style={{ flex: 1 }}>
-        <ImageBackground source={{ uri: cover?.uri }} style={{ flex: 1 }}>
+        <ImageBackground source={{ uri: item.thumbnail }} style={{ flex: 1 }}>
           <View
             style={{
               position: "absolute",

@@ -5,12 +5,11 @@ import {
   useEffect,
   useState,
 } from "react";
-import { tokenRefreshSubject } from "@/api/events/token";
 import { useStorageState } from "@/hooks/useStorageState";
+import { useLoginMutation } from "@/services/authentication";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export type UserType = any;
-
-const authentication = {};
 
 interface AuthContextType {
   user?: Partial<UserType>;
@@ -19,7 +18,6 @@ interface AuthContextType {
   isLoaded?: boolean;
   setInitialized?: Function;
   signing?: boolean;
-  setUser?: (user: Partial<UserType>) => void;
   signIn?: (username: string, password: string) => Promise<any>;
   signOut?: () => void;
   signUp?: () => void;
@@ -43,48 +41,42 @@ export function AuthProvider({ children }: PropsWithChildren) {
     process.env.EXPO_PUBLIC_STORAGE_SESSION_KEY ?? ""
   );
   const [initialized, setInitialized] = useState(false);
-  const [signing, setSigning] = useState(false);
   const [user, setUser] = useState<Partial<UserType>>();
 
-  useEffect(() => {
-    const subscription = tokenRefreshSubject.subscribe({
-      next: (value: any) => {
-        if (value) {
-          const { access_token, refresh_token } = value;
-          setTokens(JSON.stringify({ access_token, refresh_token }));
-        } else setTokens(value);
-      },
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
+  const [login, { isLoading }] = useLoginMutation();
 
   useEffect(() => {
-    if (session) setInitialized(true);
+    if (session) {
+      AsyncStorage.getItem(
+        `${process.env.EXPO_PUBLIC_STORAGE_SESSION_KEY ?? ""}_user`
+      )
+        .then((value) => setUser(value ? JSON.parse(value) : undefined))
+        .finally(() => setInitialized(true));
+    }
   }, [session]);
 
   const signIn = async (username: string, password: string) => {
-    setSigning(true);
-    return authentication
-      .authenticate(username, password)
-      .then((res: any) => {
-        if (res?.data) {
-          setInitialized(true);
-          const { access_token, refresh_token } = res.data;
-          setTokens(JSON.stringify({ access_token, refresh_token }));
-        }
-      })
-      .finally(() => setSigning(false));
+    return login({ username, password }).then((res: any) => {
+      if (res?.data) {
+        setInitialized(true);
+        const { token, refreshToken, ...u } = res.data;
+        setUser(u);
+        AsyncStorage.setItem(
+          `${process.env.EXPO_PUBLIC_STORAGE_SESSION_KEY ?? ""}_user`,
+          JSON.stringify(u)
+        );
+        setTokens(JSON.stringify({ token, refreshToken }));
+      }
+    });
   };
 
   const signUp = () => {
-    setSigning(true);
     setTokens("xxx");
-    setSigning(false);
   };
 
-  const signOut = async () => {
-    return authentication.logout().then(() => setTokens(null));
+  const signOut = () => {
+    setTokens(null);
+    setUser(undefined);
   };
 
   return (
@@ -93,9 +85,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
         session,
         initialized,
         isLoaded,
-        signing,
+        signing: isLoading,
         user,
-        setUser,
         signIn,
         signUp,
         signOut,

@@ -47,14 +47,14 @@ export function useStorageState(key: string): UseStateHook<string> {
       try {
         if (typeof localStorage !== "undefined") {
           const value = localStorage.getItem(key);
-          setState(value != null ? JSON.parse(value) : null);
+          setState(value);
         }
       } catch (e) {
         console.error("Local storage is unavailable:", e);
       }
     } else {
       AsyncStorage.getItem(key).then((value) => {
-        setState(value != null ? JSON.parse(value) : null);
+        setState(value);
       });
     }
   }, [key]);

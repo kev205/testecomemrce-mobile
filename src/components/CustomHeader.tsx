@@ -5,6 +5,7 @@ import { router } from "expo-router";
 import { MD3Colors } from "react-native-paper/lib/typescript/types";
 import { grayish } from "@/constants/Colors";
 import { StyleProp, TextStyle } from "react-native";
+import { useCart } from "@/context/CartContext";
 
 export default function CustomHeader({
   options,
@@ -14,9 +15,11 @@ export default function CustomHeader({
   colors: MD3Colors;
   titleStyle?: StyleProp<TextStyle>;
 }) {
-  const goToCart = () => router.navigate("/cart/");
+  const goToCart = () => router.navigate("/cart-details/");
 
   const goToNotif = () => router.navigate("/notifications/");
+
+  const { total } = useCart();
 
   return (
     <Appbar.Header mode="small">
@@ -36,7 +39,7 @@ export default function CustomHeader({
               }}
               size={16}
             >
-              5
+              2
             </Badge>
           </>
         )}
@@ -49,19 +52,21 @@ export default function CustomHeader({
         icon={(props) => (
           <>
             <MaterialIcons name="shopping-cart" {...props} />
-            <Badge
-              style={{
-                position: "absolute",
-                top: 5,
-                right: 5,
-                fontSize: 10,
-                color: grayish,
-                backgroundColor: colors.primary,
-              }}
-              size={16}
-            >
-              5
-            </Badge>
+            {!!total && (
+              <Badge
+                style={{
+                  position: "absolute",
+                  top: 5,
+                  right: 5,
+                  fontSize: 10,
+                  color: grayish,
+                  backgroundColor: colors.primary,
+                }}
+                size={16}
+              >
+                {total}
+              </Badge>
+            )}
           </>
         )}
         rippleColor="transparent"

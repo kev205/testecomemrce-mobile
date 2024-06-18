@@ -2,7 +2,7 @@ import React from "react";
 import { Tabs } from "expo-router";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomHeader from "@/components/CustomHeader";
-import { useTheme } from "react-native-paper";
+import { Avatar, useTheme } from "react-native-paper";
 import { useAuth } from "@/context/AuthContext";
 
 function TabBarIcon(props: {
@@ -55,10 +55,9 @@ export default function TabLayout() {
               {...props}
             />
           ),
-          title: `${user?.account?.balance} xaf`,
+          title: "Home",
           tabBarLabel: "Home",
           headerTitleStyle: { backgroundColor: "red" },
-          lazy: false,
         }}
       />
       <Tabs.Screen
@@ -76,7 +75,7 @@ export default function TabLayout() {
         name="cart"
         options={{
           tabBarIcon({ color }) {
-            return <FontAwesome name="dashboard" size={24} color={color} />;
+            return <FontAwesome name="shopping-cart" size={24} color={color} />;
           },
           tabBarItemStyle: { marginBottom: 4 },
           title: "Paniers",
@@ -86,13 +85,16 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          tabBarIcon({ color }) {
-            return <TabBarIcon name="user-circle" color={color} />;
+          tabBarIcon({ color, size }) {
+            return !!user?.image ? (
+              <Avatar.Image source={{ uri: user.image }} size={size} />
+            ) : (
+              <TabBarIcon name="user-circle" color={color} />
+            );
           },
           tabBarItemStyle: { marginBottom: 4 },
           title: "Profile",
           header: (props) => <CustomHeader colors={colors} {...props} />,
-          lazy: false,
         }}
       />
     </Tabs>

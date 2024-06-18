@@ -1,9 +1,7 @@
-import { Suspense, useCallback, useEffect, useState } from "react";
-import { Dimensions, ScrollView, View } from "react-native";
-import { ActivityIndicator } from "react-native-paper";
+import { useCallback } from "react";
+import { Dimensions, ScrollView } from "react-native";
 import { SharedValue } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
-import { useAuth } from "@/context/AuthContext";
 import HomeSections from "@/components/suspense/HomeSections";
 import TopGoodsCard from "@/components/TopGoodsCard";
 import { useTopProductsQuery } from "@/services/products";
@@ -16,19 +14,14 @@ export default function Page() {
   // states
 
   const { data: topGoods } = useTopProductsQuery({
-    page: { skip: 0, limit: 5 },
+    page: {
+      skip: 0,
+      limit: 5,
+    },
+    sortBy: "meta.creadtedAt",
+    order: "desc",
+    select: "id,category,title,description,thumbnail",
   });
-
-  const { setUser } = useAuth();
-
-  // api calls
-  const profileData: any = {};
-
-  useEffect(() => {
-    if (profileData) {
-      setUser && setUser(profileData.getProfile);
-    }
-  }, [profileData]);
 
   const renderTopProduct = useCallback(
     ({
@@ -71,17 +64,7 @@ export default function Page() {
         autoPlay
         loop={false}
       />
-      <Suspense
-        fallback={
-          <View
-            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-          >
-            <ActivityIndicator />
-          </View>
-        }
-      >
-        <HomeSections />
-      </Suspense>
+      <HomeSections />
     </ScrollView>
   );
 }

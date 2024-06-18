@@ -1,6 +1,6 @@
 import { useAuth } from "@/context/AuthContext";
 import { router, useLocalSearchParams } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { View } from "react-native";
 import { Button, HelperText, Text, TextInput } from "react-native-paper";
 
@@ -12,24 +12,18 @@ export default function Page() {
   const [password, setPassword] = useState<string>("");
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [error, setError] = useState(false);
-  const [isSigning, setIsSigning] = useState(signing);
 
   const switchSecureEntry = () => setSecureTextEntry((prev) => !prev);
 
   const onError = () => setError(true);
 
   const _signIn = useCallback(() => {
-    setIsSigning(false);
     if (signIn && username && password) {
       signIn(username, password)
         .then(() => router.replace("/(app)/(tabs)/home"))
         .catch(onError);
     }
-  }, [password]);
-
-  useEffect(() => {
-    setIsSigning(signing);
-  }, [signing]);
+  }, [username, password]);
 
   return (
     <View
@@ -71,7 +65,7 @@ export default function Page() {
         <View style={{ alignSelf: "flex-end", marginTop: 32 }}>
           <Button
             onPress={_signIn}
-            loading={isSigning}
+            loading={signing}
             mode="contained"
             theme={{ roundness: 0 }}
             style={{ padding: 8 }}

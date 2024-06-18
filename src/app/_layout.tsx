@@ -17,6 +17,7 @@ import {
 } from "@react-navigation/native";
 import { Provider } from "react-redux";
 import { store } from "@/store/store";
+import { AuthProvider } from "@/context/AuthContext";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -65,14 +66,16 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <PaperProvider theme={theme}>
+      <PaperProvider /* theme={theme} */>
         <ThemeProvider value={theme}>
           <Provider store={store}>
-            <Stack
-              screenOptions={{
-                headerShown: false,
-              }}
-            />
+            <AuthProvider>
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                }}
+              />
+            </AuthProvider>
           </Provider>
         </ThemeProvider>
       </PaperProvider>
