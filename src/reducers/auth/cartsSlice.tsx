@@ -17,7 +17,7 @@ const slice = createSlice({
     builder.addMatcher(
       cartsApi.endpoints.cartsByUser.matchFulfilled,
       (state, { payload }) => {
-        state.carts = payload.carts;
+        state.carts = [...state.carts, ...payload.carts];
         state.skip = payload.skip;
         state.isLoaded = true;
       }
@@ -26,18 +26,12 @@ const slice = createSlice({
       cartsApi.endpoints.addCart.matchFulfilled,
       (state, { payload }) => {
         state.carts = [payload, ...state.carts];
-        console.log("cart added", payload);
       }
     );
-    builder.addMatcher(cartsApi.endpoints.addCart.matchRejected, (_, error) => {
-      console.error("addCart failed", error);
-    });
     builder.addMatcher(
       cartsApi.endpoints.updateCart.matchFulfilled,
       (state, { payload }) => {
-        console.log(payload);
         const index = state.carts.findIndex((cart) => cart.id === payload.id);
-        console.log("index", index);
         state.carts[index] = payload;
       }
     );

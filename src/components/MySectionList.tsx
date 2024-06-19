@@ -1,4 +1,4 @@
-import { FC, memo, useCallback } from "react";
+import { FC, memo } from "react";
 import { Pressable, ScrollView, View, ViewStyle } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import ForwardButton from "@/components/ForwardButton";
@@ -12,6 +12,7 @@ const MySectionList: FC<{
   flexDirection?: "row" | "column" | "row-reverse" | "column-reverse";
   renderItem?: any;
   contentContainerStyle?: ViewStyle;
+  gridSize?: number;
 }> = ({
   title = "",
   items,
@@ -21,12 +22,31 @@ const MySectionList: FC<{
   flexDirection,
   renderItem,
   contentContainerStyle,
+  gridSize = 3,
 }) => {
   const { colors } = useTheme();
 
-  const renderFunction = useCallback((value: any, index: number) => {
+  const renderFunction = (value: any, index: number) => {
     return renderItem && renderItem({ item: value, index });
-  }, []);
+  };
+
+  const renderRows = (items: any[]) => {
+    const rows: any[] = [];
+    for (let i = 0; i < items.length; i += gridSize) {
+      rows.push(
+        <View
+          key={i}
+          style={{
+            flexDirection: flexDirection,
+          }}
+        >
+          {items.slice(i, i + gridSize).map(renderFunction)}
+        </View>
+      );
+    }
+
+    return rows;
+  };
 
   return (
     <View style={[{ flex: 1 }, contentContainerStyle]}>
@@ -62,11 +82,11 @@ const MySectionList: FC<{
       ) : (
         <View
           style={{
-            flexDirection: flexDirection,
+            flex: 1,
             flexWrap: "wrap",
           }}
         >
-          {items.map(renderFunction)}
+          {renderRows(items)}
         </View>
       )}
     </View>

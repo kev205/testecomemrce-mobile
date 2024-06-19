@@ -6,6 +6,7 @@ import {
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
 import { BASE_API_URL } from "@/api/endpoints";
+import { RootState } from "@/store/store";
 
 type Pagination = {
   limit: number;
@@ -32,8 +33,13 @@ const dynamicBaseQuery: BaseQueryFn<
 
   return fetchBaseQuery({
     baseUrl: `${BASE_API_URL}/carts`,
-    prepareHeaders(headers) {
-      headers.set("Authorization", `Bearer ${session.token}`);
+    prepareHeaders(headers, { getState }) {
+      const { token } = (getState() as RootState).auth.session ?? {};
+      console.log("token", token);
+      if (token) {
+        headers.set("authorization", `Bearer ${token}`);
+      }
+      return headers;
     },
   })(adjustedArgs, api, extraOptions);
 };
@@ -54,11 +60,23 @@ export const cartsApi = createApi({
       query: ({ userId, products }) => {
         return {
           url: "/add",
-          methood: "POST",
+          method: "POST",
           body: { userId, products },
           headers: { "Content-Type": "application/json" },
         };
       },
+      // async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
+      //   const patchResult = dispatch(
+      //     createApi.util.updateQueryData("getPost", id, (draft) => {
+      //       Object.assign(draft, patch);
+      //     })
+      //   );
+      //   try {
+      //     await queryFulfilled;
+      //   } catch {
+      //     patchResult.undo();
+      //   }
+      // },
     }),
     updateCart: builder.mutation<any, Partial<CartPayload>>({
       query: ({ id, products }) => {
@@ -74,7 +92,7 @@ export const cartsApi = createApi({
       query: (id) => {
         return {
           url: `/${id}`,
-          methood: "DELETE",
+          method: "DELETE",
         };
       },
     }),

@@ -1,11 +1,16 @@
 import { useCallback } from "react";
-import { Dimensions, ScrollView } from "react-native";
+import { Dimensions, ScrollView, View } from "react-native";
 import { SharedValue } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 import HomeSections from "@/components/suspense/HomeSections";
 import TopGoodsCard from "@/components/TopGoodsCard";
-import { useTopProductsQuery } from "@/services/products";
+import {
+  useListCategoriesQuery,
+  useTopProductsQuery,
+} from "@/services/products";
 import { Article } from "@/api/models/entities";
+import { Text } from "react-native-paper";
+import CategoryItem from "@/components/CategoryItem";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -17,8 +22,10 @@ export default function Page() {
     },
     sortBy: "meta.creadtedAt",
     order: "desc",
-    select: "id,category,title,description,thumbnail",
+    select: "id,title,thumbnail,category,brand,price,discountPercentage",
   });
+
+  const { data: categories } = useListCategoriesQuery({});
 
   const renderTopProduct = useCallback(
     ({
@@ -45,7 +52,7 @@ export default function Page() {
       style={{ flex: 1 }}
       contentContainerStyle={{
         flexGrow: 1,
-        paddingTop: 5,
+        paddingVertical: 10,
       }}
       showsVerticalScrollIndicator={false}
     >
@@ -62,6 +69,22 @@ export default function Page() {
         loop={false}
       />
       <HomeSections />
+      <View>
+        <Text style={{ marginVertical: 10 }} variant="titleLarge">
+          Categories
+        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            flexWrap: "wrap",
+          }}
+        >
+          {categories?.map((category: any) => (
+            <CategoryItem key={category.slug} item={category} />
+          ))}
+        </View>
+      </View>
     </ScrollView>
   );
 }

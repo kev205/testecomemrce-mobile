@@ -3,13 +3,11 @@ import { Appbar, Badge } from "react-native-paper";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { MD3Colors } from "react-native-paper/lib/typescript/types";
-import { grayish } from "@/constants/Colors";
 import { StyleProp, TextStyle } from "react-native";
 import { useCart } from "@/context/CartContext";
 
 export default function CustomHeader({
   options,
-  colors,
   titleStyle,
 }: BottomTabHeaderProps & {
   colors: MD3Colors;
@@ -34,8 +32,6 @@ export default function CustomHeader({
                 top: 5,
                 right: 5,
                 fontSize: 10,
-                color: grayish,
-                backgroundColor: colors.primary,
               }}
               size={16}
             >
@@ -59,8 +55,6 @@ export default function CustomHeader({
                   top: 5,
                   right: 5,
                   fontSize: 10,
-                  color: grayish,
-                  backgroundColor: colors.primary,
                 }}
                 size={16}
               >

@@ -46,7 +46,7 @@ export default function Page() {
   }, [id, products]);
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
+    <View style={{ flex: 1, paddingVertical: 16, paddingLeft: 10 }}>
       <Stack.Screen
         options={{
           header: CustomAppHeader,
@@ -54,6 +54,8 @@ export default function Page() {
       />
       <FlatList
         data={products}
+        style={{ flex: 1 }}
+        contentContainerStyle={{ flexGrow: 1 }}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         initialNumToRender={10}
@@ -63,6 +65,7 @@ export default function Page() {
       <Button
         mode="contained"
         loading={isLoading}
+        disabled={isLoading}
         onPress={saveCart}
         theme={{ roundness: 2 }}
       >

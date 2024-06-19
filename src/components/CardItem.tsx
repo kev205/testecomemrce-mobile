@@ -1,13 +1,9 @@
 import { Article } from "@/api/models/entities";
 import { Link } from "expo-router";
 import { FC, memo } from "react";
-import { Dimensions, Pressable, View } from "react-native";
-import { Text, useTheme } from "react-native-paper";
-import Animated from "react-native-reanimated";
-
-const height = 195;
-
-const { width } = Dimensions.get("screen");
+import { Image, Pressable, View } from "react-native";
+import { Text } from "react-native-paper";
+import PriceView from "./PriceView";
 
 const CardItem: FC<
   { item: Partial<Article> } & {
@@ -15,37 +11,38 @@ const CardItem: FC<
     size?: number;
   }
 > = ({ item, noprice, size }) => {
-  const { colors } = useTheme();
-
   return (
-    <Link href={`/product/${item.id}`} asChild>
+    <Link href={`/category/${item.category}/product/${item.id}`} asChild>
       <Pressable
+        testID="card-item-container"
         style={{
-          width: size ?? width / 3 - 10,
-          height,
+          flex: 1 / (size ?? 3),
           marginBottom: 8,
-          paddingVertical: 5,
-          marginRight: 7.5,
+          padding: 2,
+          marginHorizontal: 2,
         }}
       >
-        <Animated.Image
-          style={{ flex: 1, borderRadius: 8 }}
+        <Image
+          style={{ height: 100, width: 100, borderRadius: 8 }}
           source={{
             uri: item.thumbnail,
           }}
-          sharedTransitionTag="sharedCartThumbnail"
+          accessibilityLabel="thumbnail"
         />
-        <View style={{ marginTop: 5, flex: 0.5 }}>
+        <View style={{ marginTop: 5, flex: 0.5, alignItems: "center" }}>
           <Text variant="titleSmall" numberOfLines={1}>
             {item.title}
           </Text>
           <View>
             {!noprice && (
-              <Text
-                variant="bodyMedium"
-                style={{ color: colors.primary, marginTop: 5 }}
-                numberOfLines={1}
-              >{`${item.price} XAF`}</Text>
+              <PriceView
+                originalPrice={item.price}
+                discount={item.discountPercentage}
+                styles={{
+                  textVariant1: "bodyMedium",
+                  textVariant2: "bodyMedium",
+                }}
+              />
             )}
           </View>
         </View>

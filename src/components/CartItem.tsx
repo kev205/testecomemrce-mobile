@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Avatar, List, Text, useTheme } from "react-native-paper";
+import { Avatar, List, useTheme } from "react-native-paper";
 import Quantifier from "./Quantifier";
 import { Pressable, View } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import PriceView from "./PriceView";
 
 export default function CartItem({
   item,
@@ -38,7 +39,24 @@ export default function CartItem({
     <List.Item
       left={left}
       title={item.title}
-      description={`$${item.price}`}
+      titleStyle={{ fontWeight: "bold" }}
+      description={
+        <PriceView
+          originalPrice={item.price}
+          discount={item.discountPercentage}
+          styles={{
+            textVariant1: "bodyMedium",
+            textVariant2: "bodyMedium",
+            containerStyle: {
+              flex: 1,
+              flexDirection: "row",
+              alignItems: "center",
+              paddingTop: 8,
+            },
+          }}
+          trailingSpaces
+        />
+      }
       right={right}
     />
   );

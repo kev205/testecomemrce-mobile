@@ -1,7 +1,8 @@
-import { List, Text, useTheme } from "react-native-paper";
+import { List, useTheme } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Pressable, View } from "react-native";
+import { Pressable } from "react-native";
 import { Link } from "expo-router";
+import PriceView from "./PriceView";
 
 export default function CartListItem({
   item,
@@ -33,25 +34,15 @@ export default function CartListItem({
       <List.Item
         left={left}
         title={
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text
-              variant={item.discountedTotal ? "bodyMedium" : "bodyLarge"}
-              style={[
-                item.discountedTotal && {
-                  textDecorationLine: "line-through",
-                  color: "#999",
-                },
-              ]}
-            >
-              {`$${item.total}`}
-            </Text>
-            {!!item.discountedTotal && (
-              <Text
-                variant="bodyLarge"
-                style={{ marginLeft: 5, fontWeight: "bold" }}
-              >{`$${item.discountedTotal}`}</Text>
-            )}
-          </View>
+          <PriceView
+            originalPrice={item.total}
+            discount={((item.total - item.discountedTotal) / item.total) * 100}
+            styles={{
+              containerStyle: { flexDirection: "row", alignItems: "center" },
+              textVariant1: item.discountedTotal ? "bodyMedium" : "bodyLarge",
+              textVariant2: "bodyLarge",
+            }}
+          />
         }
         description={`${item.totalProducts} Products`}
         right={right}

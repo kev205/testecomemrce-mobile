@@ -25,17 +25,18 @@ export default function Page() {
   const addCart = useCallback(() => {
     if (!user || !cart.products?.length) return;
 
-    add({
-      userId: user.id,
-      products: cart.products.map((product) => ({
-        id: product.id,
-        quantity: 1,
-      })),
-    });
+    add &&
+      add({
+        userId: user.id,
+        products: cart.products.map((product) => ({
+          id: product.id,
+          quantity: 1,
+        })),
+      });
   }, [user, cart?.products]);
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
+    <View style={{ flex: 1, paddingVertical: 16, paddingLeft: 10 }}>
       <Stack.Screen
         options={{
           header: CustomAppHeader,
@@ -43,6 +44,8 @@ export default function Page() {
       />
       <FlatList
         data={cart.products}
+        style={{ flex: 1 }}
+        contentContainerStyle={{ flexGrow: 1 }}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         initialNumToRender={10}
@@ -52,6 +55,7 @@ export default function Page() {
       <Button
         mode="contained"
         loading={isLoading}
+        disabled={isLoading}
         onPress={addCart}
         theme={{ roundness: 2 }}
       >

@@ -56,7 +56,7 @@ export const productsApi = createApi({
       query: ({ page }) => {
         return {
           url: "/",
-          methood: "GET",
+          method: "GET",
           params: { ...page },
         };
       },
@@ -66,7 +66,7 @@ export const productsApi = createApi({
       query: ({ category, page }) => {
         return {
           url: `/category/${category}`,
-          methood: "GET",
+          method: "GET",
           params: { ...page },
         };
       },
@@ -75,17 +75,46 @@ export const productsApi = createApi({
       query: ({ category, page }) => {
         return {
           url: `/category/${category}`,
-          methood: "GET",
+          method: "GET",
           params: { ...page },
         };
       },
-      providesTags: () => ["Category"],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.products.map(({ id }) => ({
+                type: "Product" as const,
+                id,
+              })),
+              { type: "Category", id: "PARTIAL-LIST" },
+            ]
+          : [{ type: "Category", id: "PARTIAL-LIST" }],
     }),
     getProduct: builder.query<any, number>({
       query: (id) => {
         return {
           url: `/${id}`,
-          methood: "GET",
+          method: "GET",
+        };
+      },
+      providesTags: (result) => [{ type: "Product", id: result?.id }],
+    }),
+    listCategories: builder.query<any, Partial<Pagination>>({
+      query: (page) => {
+        return {
+          url: "/categories",
+          method: "GET",
+          params: { ...page },
+        };
+      },
+      providesTags: () => ["Product"],
+    }),
+    searchProducts: builder.query<any, { q: string } & Descriptor>({
+      query: (params) => {
+        return {
+          url: "/search",
+          method: "GET",
+          params,
         };
       },
       providesTags: () => ["Product"],
@@ -101,5 +130,7 @@ export const {
   useTopProductsQuery,
   useLazyTopProductsQuery,
   useProductsOfFavoriteCategoryQuery,
+  useListCategoriesQuery,
+  useSearchProductsQuery,
   usePrefetch,
 } = productsApi;
