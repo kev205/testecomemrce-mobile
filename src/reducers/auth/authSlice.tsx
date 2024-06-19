@@ -1,5 +1,5 @@
 import { authenticationApi } from "@/services/authentication";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type AuthState = {
   user?: any;
@@ -9,7 +9,14 @@ type AuthState = {
 const slice = createSlice({
   name: "auth",
   initialState: {} as AuthState,
-  reducers: {},
+  reducers: {
+    setSession: (state, { payload }: PayloadAction<any>) => {
+      const { token, refreshToken, ...user } = payload;
+
+      state.user = user;
+      state.session = { token, refreshToken };
+    },
+  },
   extraReducers: (builder) => {
     builder.addMatcher(
       authenticationApi.endpoints.login.matchFulfilled,
@@ -33,7 +40,7 @@ const slice = createSlice({
   },
 });
 
-export const {} = slice.actions;
+export const { setSession } = slice.actions;
 
 export const { getSession, getUser } = slice.selectors;
 

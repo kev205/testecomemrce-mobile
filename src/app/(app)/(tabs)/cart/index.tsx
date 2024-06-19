@@ -10,7 +10,14 @@ import {
 import { Stack } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { FlatList, View } from "react-native";
-import { Button, Dialog, Portal, Text, useTheme } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Button,
+  Dialog,
+  Portal,
+  Text,
+  useTheme,
+} from "react-native-paper";
 import { useSelector } from "react-redux";
 
 export default function Page() {
@@ -18,7 +25,7 @@ export default function Page() {
 
   const { colors } = useTheme();
 
-  const [fetchCarts] = useLazyCartsByUserQuery();
+  const [fetchCarts, { isLoading }] = useLazyCartsByUserQuery();
 
   const [deleteReq] = useDeleteCartMutation();
 
@@ -59,14 +66,20 @@ export default function Page() {
           header: CustomAppHeader,
         }}
       />
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        initialNumToRender={10}
-        ListEmptyComponent={ListEmptyComponent}
-        showsVerticalScrollIndicator={false}
-      />
+      {isLoading ? (
+        <View style={{ flex: 1 }}>
+          <ActivityIndicator />
+        </View>
+      ) : (
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          initialNumToRender={10}
+          ListEmptyComponent={ListEmptyComponent}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
       <Portal>
         <Dialog visible={showConfirm} onDismiss={flipModal}>
           <Dialog.Title>Sign out?</Dialog.Title>

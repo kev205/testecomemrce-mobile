@@ -80,7 +80,6 @@ export default function TabLayout() {
           tabBarItemStyle: { marginBottom: 4 },
           title: "Paniers",
           header: (props) => <CustomHeader colors={colors} {...props} />,
-          lazy: false,
         }}
       />
       <Tabs.Screen

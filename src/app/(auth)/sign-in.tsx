@@ -11,10 +11,10 @@ export default function Page() {
   const { colors } = useTheme();
 
   return (
-    <View style={{ flex: 1, paddingTop: insets.top, paddingHorizontal: 16 }}>
+    <View style={{ flex: 1 }}>
       <View
         style={{
-          flex: 0.8,
+          flex: 1,
           alignItems: "center",
           justifyContent: "center",
           paddingHorizontal: 16,

@@ -8,9 +8,11 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
    ```bash
    npm install
+   or
+   yarn install
    ```
 
-2. Rename .env.exanme to .env
+2. Rename .env.example to .env
 
 3. Start the app
 

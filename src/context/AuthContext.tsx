@@ -8,6 +8,8 @@ import {
 import { useStorageState } from "@/hooks/useStorageState";
 import { useLoginMutation } from "@/services/authentication";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch } from "react-redux";
+import { setSession } from "@/reducers/auth/authSlice";
 
 export type UserType = any;
 
@@ -43,6 +45,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const [initialized, setInitialized] = useState(false);
   const [user, setUser] = useState<Partial<UserType>>();
 
+  const dispatch = useDispatch();
   const [login, { isLoading }] = useLoginMutation();
 
   useEffect(() => {
@@ -54,6 +57,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
         .finally(() => setInitialized(true));
     }
   }, [session]);
+
+  useEffect(() => {
+    if (session && user) {
+      const s = JSON.parse(session);
+      dispatch(setSession({ ...user, ...s }));
+    }
+  }, [session, user]);
 
   const signIn = async (username: string, password: string) => {
     return login({ username, password }).then((res: any) => {

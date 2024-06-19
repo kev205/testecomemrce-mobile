@@ -3,7 +3,7 @@ import { useCart } from "@/context/CartContext";
 import { useGetProductQuery } from "@/services/products";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router, Stack, useLocalSearchParams } from "expo-router";
-import { Image, View } from "react-native";
+import { Dimensions, Image, View } from "react-native";
 import {
   ActivityIndicator,
   Badge,
@@ -11,6 +11,9 @@ import {
   Chip,
   Text,
 } from "react-native-paper";
+import Carousel from "react-native-reanimated-carousel";
+
+const { width } = Dimensions.get("screen");
 
 export default function Page() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -20,7 +23,7 @@ export default function Page() {
   const { addToCart, total } = useCart();
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
+    <View style={{ flex: 1, paddingHorizontal: 16, paddingBottom: 16 }}>
       <Stack.Screen
         options={{
           title: data?.title ?? "",
@@ -62,10 +65,21 @@ export default function Page() {
       ) : (
         <>
           <View style={{ flex: 1 }}>
-            <Image
-              source={{ uri: data?.thumbnail }}
-              style={{ width: "100%", height: 200 }}
-            />
+            {data?.images && (
+              <Carousel
+                style={{ flex: 1 }}
+                width={width}
+                data={data.images}
+                autoPlayInterval={2000}
+                scrollAnimationDuration={1000}
+                mode="parallax"
+                renderItem={({ item: uri }: { item: string }) => (
+                  <Image source={{ uri }} style={{ flex: 1 }} />
+                )}
+                windowSize={1}
+                loop={false}
+              />
+            )}
           </View>
           <View style={{ flex: 1 }}>
             <View

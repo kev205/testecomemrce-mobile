@@ -35,7 +35,6 @@ const dynamicBaseQuery: BaseQueryFn<
     baseUrl: `${BASE_API_URL}/carts`,
     prepareHeaders(headers, { getState }) {
       const { token } = (getState() as RootState).auth.session ?? {};
-      console.log("token", token);
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
       }
@@ -65,18 +64,6 @@ export const cartsApi = createApi({
           headers: { "Content-Type": "application/json" },
         };
       },
-      // async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
-      //   const patchResult = dispatch(
-      //     createApi.util.updateQueryData("getPost", id, (draft) => {
-      //       Object.assign(draft, patch);
-      //     })
-      //   );
-      //   try {
-      //     await queryFulfilled;
-      //   } catch {
-      //     patchResult.undo();
-      //   }
-      // },
     }),
     updateCart: builder.mutation<any, Partial<CartPayload>>({
       query: ({ id, products }) => {

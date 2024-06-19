@@ -36,39 +36,25 @@ export default function Page() {
       <View style={{ alignItems: "center" }}>
         {!!user?.image && <Avatar.Image source={{ uri: user.image }} />}
         <Text variant="titleLarge" style={{ marginTop: 16 }}>
-          Hello {user?.username}
+          <Text>Hello, </Text>
+          <Text style={{ fontWeight: "bold" }}>{user?.username}</Text>
         </Text>
       </View>
       <View style={{ position: "absolute", bottom: 16, left: 16, right: 16 }}>
-        <Pressable
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            paddingVertical: 10,
-          }}
+        <Button
           onPress={flipModal}
+          mode="contained-tonal"
+          icon={(props) => (
+            <MaterialCommunityIcons
+              name="logout"
+              {...props}
+              color={colors.onBackground}
+            />
+          )}
+          theme={{ roundness: 2 }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-evenly",
-              padding: 5,
-            }}
-          >
-            <View>
-              <MaterialCommunityIcons
-                name="logout"
-                size={24}
-                color={colors.onBackground}
-              />
-            </View>
-            <Text style={{ marginLeft: 20 }} variant="titleMedium">
-              Sign Out
-            </Text>
-          </View>
-        </Pressable>
+          Sign Out
+        </Button>
       </View>
       <Portal>
         <Dialog visible={showConfirm} onDismiss={flipModal}>
