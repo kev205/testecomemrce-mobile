@@ -1,7 +1,7 @@
 import { useAuth } from "@/context/AuthContext";
 import { router } from "expo-router";
-import { useCallback, useState } from "react";
-import { View } from "react-native";
+import { useCallback, useRef, useState } from "react";
+import { TextInput as RnTextInput, View } from "react-native";
 import { Button, HelperText, Text, TextInput } from "react-native-paper";
 
 export default function Page() {
@@ -10,16 +10,21 @@ export default function Page() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<any>();
+
+  const passRef = useRef<RnTextInput>(null);
 
   const switchSecureEntry = () => setSecureTextEntry((prev) => !prev);
 
-  const onError = () => setError(true);
+  const onError = (err: any) => setError(err.data?.message);
 
   const _signIn = useCallback(() => {
     if (signIn && username && password) {
+      setError(undefined);
       signIn(username, password)
-        .then(() => router.replace("/(app)/(tabs)/home"))
+        .then((res: any) => {
+          if (res) router.replace("/(app)/(tabs)/home");
+        })
         .catch(onError);
     }
   }, [username, password]);
@@ -45,9 +50,11 @@ export default function Page() {
           autoCapitalize="none"
           autoCorrect={false}
           onChangeText={setUsername}
+          onSubmitEditing={() => passRef.current?.focus()}
         />
         <View style={{ marginTop: 16 }}>
           <TextInput
+            ref={passRef}
             mode="outlined"
             value={password}
             label="Password"
@@ -64,8 +71,8 @@ export default function Page() {
             }
             secureTextEntry={secureTextEntry}
           />
-          <HelperText type="error" visible={error}>
-            Incorrect password
+          <HelperText type="error" visible={!!error} variant="bodyMedium">
+            {error}
           </HelperText>
         </View>
         <View style={{ marginTop: 16 }}>

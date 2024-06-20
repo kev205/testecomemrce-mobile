@@ -76,7 +76,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
           JSON.stringify(u)
         );
         setTokens(JSON.stringify({ token, refreshToken }));
-      }
+      } else throw res?.error;
+      return res;
     });
   };
 

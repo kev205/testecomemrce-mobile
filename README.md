@@ -14,19 +14,24 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 2. Rename .env.example to .env
 
-3. Start the app
+3. Prebuild the project
+```bash
+   npx expo prebuild
+```
+
+4. Run the app
 
 ```bash
-   yarn start
+   yarn android # utilisez --device pour lancer sur un android branché au lieu de l'emulateur
    # or
-   npm run start
+   npm run android --device
 ```
 
 You can open the app with android devices or emulators
 
 - [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+You can start developing by editing the files inside the **src** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
 ## Get a fresh project
 

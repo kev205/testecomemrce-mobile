@@ -3,7 +3,8 @@ import { useCart } from "@/context/CartContext";
 import { useGetProductQuery } from "@/services/products";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router, Stack, useLocalSearchParams } from "expo-router";
-import { Dimensions, Image, View } from "react-native";
+import { Dimensions, View } from "react-native";
+import FastImage from "react-native-fast-image";
 import {
   ActivityIndicator,
   Badge,
@@ -74,7 +75,10 @@ export default function Page() {
                 scrollAnimationDuration={1000}
                 mode="parallax"
                 renderItem={({ item: uri }: { item: string }) => (
-                  <Image source={{ uri }} style={{ flex: 1 }} />
+                  <FastImage
+                    source={{ uri, priority: FastImage.priority.high }}
+                    style={{ flex: 1 }}
+                  />
                 )}
                 windowSize={1}
                 loop={false}

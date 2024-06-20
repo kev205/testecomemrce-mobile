@@ -1,9 +1,10 @@
 import { Article } from "@/api/models/entities";
 import { Link } from "expo-router";
 import { FC, memo } from "react";
-import { Image, Pressable, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { Text } from "react-native-paper";
 import PriceView from "./PriceView";
+import FastImage from "react-native-fast-image";
 
 const CardItem: FC<
   { item: Partial<Article> } & {
@@ -22,10 +23,11 @@ const CardItem: FC<
           marginHorizontal: 2,
         }}
       >
-        <Image
+        <FastImage
           style={{ height: 100, width: 100, borderRadius: 8 }}
           source={{
             uri: item.thumbnail,
+            priority: FastImage.priority.high,
           }}
           accessibilityLabel="thumbnail"
         />

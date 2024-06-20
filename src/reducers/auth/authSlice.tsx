@@ -27,12 +27,6 @@ const slice = createSlice({
         state.session = { token, refreshToken };
       }
     );
-    builder.addMatcher(
-      authenticationApi.endpoints.login.matchRejected,
-      (state, err) => {
-        console.error(err);
-      }
-    );
   },
   selectors: {
     getSession: (state) => state.session,
