@@ -17,9 +17,9 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 3. Start the app
 
 ```bash
-   yarn android --device
+   yarn start
    # or
-   npm run android --device
+   npm run start
 ```
 
 You can open the app with android devices or emulators
