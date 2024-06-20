@@ -2,11 +2,11 @@ import { useCallback } from "react";
 import { View } from "react-native";
 import { router } from "expo-router";
 import { useProductsOfFavoriteCategoryQuery } from "@/services/products";
-import MySectionList from "../MySectionList";
-import CardItem from "../CardItem";
 import { capitalizeString } from "@/utils/string";
 import { Article } from "@/api/models/entities";
 import { favoriteCategory } from "@/app";
+import CardItem from "./CardItem";
+import MySectionList from "./MySectionList";
 
 type Section = {
   id: string;

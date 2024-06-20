@@ -1,8 +1,6 @@
-import { useCallback } from "react";
-import { Dimensions, ScrollView, View } from "react-native";
+import { lazy, Suspense, useCallback } from "react";
+import { ScrollView, View } from "react-native";
 import { SharedValue } from "react-native-reanimated";
-import Carousel from "react-native-reanimated-carousel";
-import HomeSections from "@/components/suspense/HomeSections";
 import TopGoodsCard from "@/components/TopGoodsCard";
 import {
   useListCategoriesQuery,
@@ -11,8 +9,12 @@ import {
 import { Article } from "@/api/models/entities";
 import { Text } from "react-native-paper";
 import CategoryItem from "@/components/CategoryItem";
+import HomeCarouselSuspense from "@/components/suspense/HomeCarouselSuspense";
+import HomeSectionSuspense from "@/components/suspense/HomeTopSuspense";
 
-const { width, height } = Dimensions.get("screen");
+// lazy imports for suspense
+const HomeCarousel = lazy(() => import("@/components/HomeCarousel"));
+const HomeSections = lazy(() => import("@/components/HomeSections"));
 
 export default function Page() {
   const { data: topGoods } = useTopProductsQuery({
@@ -56,19 +58,15 @@ export default function Page() {
       }}
       showsVerticalScrollIndicator={false}
     >
-      <Carousel
-        style={{ width }}
-        width={width}
-        height={height / 3}
-        data={topGoods?.products}
-        autoPlayInterval={2000}
-        scrollAnimationDuration={1000}
-        renderItem={renderTopProduct}
-        windowSize={1}
-        autoPlay
-        loop={false}
-      />
-      <HomeSections />
+      <Suspense fallback={<HomeCarouselSuspense />}>
+        <HomeCarousel
+          products={topGoods?.products}
+          renderItem={renderTopProduct}
+        />
+      </Suspense>
+      <Suspense fallback={<HomeSectionSuspense />}>
+        <HomeSections />
+      </Suspense>
       <View>
         <Text style={{ marginVertical: 10 }} variant="titleLarge">
           Categories
