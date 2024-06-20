@@ -68,7 +68,10 @@ export default function Page() {
         <HomeSections />
       </Suspense>
       <View>
-        <Text style={{ marginVertical: 10 }} variant="titleLarge">
+        <Text
+          style={{ marginVertical: 10, fontWeight: "700" }}
+          variant="titleLarge"
+        >
           Categories
         </Text>
         <View

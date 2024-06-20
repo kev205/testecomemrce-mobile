@@ -75,10 +75,7 @@ export default function Page() {
                 scrollAnimationDuration={1000}
                 mode="parallax"
                 renderItem={({ item: uri }: { item: string }) => (
-                  <FastImage
-                    source={{ uri, priority: FastImage.priority.high }}
-                    style={{ flex: 1 }}
-                  />
+                  <FastImage source={{ uri }} style={{ flex: 1 }} />
                 )}
                 windowSize={1}
                 loop={false}

@@ -27,7 +27,6 @@ const CardItem: FC<
           style={{ height: 100, width: 100, borderRadius: 8 }}
           source={{
             uri: item.thumbnail,
-            priority: FastImage.priority.high,
           }}
           accessibilityLabel="thumbnail"
         />
