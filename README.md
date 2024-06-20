@@ -16,11 +16,11 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 3. Start the app
 
-   ```bash
-    yarn android --device
-    or
-    npm run android --device
-   ```
+```bash
+yarn android --device
+# or
+npm run android --device
+```
 
 You can open the app with android devices or emulators
 
