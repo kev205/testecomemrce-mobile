@@ -6,20 +6,20 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 1. Install dependencies
 
-   ```bash
+```bash
    npm install
-   or
+   # or
    yarn install
-   ```
+```
 
 2. Rename .env.example to .env
 
 3. Start the app
 
 ```bash
-yarn android --device
-# or
-npm run android --device
+   yarn android --device
+   # or
+   npm run android --device
 ```
 
 You can open the app with android devices or emulators
